@@ -11,7 +11,10 @@ public interface BoardService {
     // 글을 삭제한다.
     public List<Board> getBoards(int page);
     public Board getBoard(Long id);
-    public void deleteBoard(Long id);
+    public long getBoardCount();
+    public void deleteBoard(Long id, Long sigendId);
     public void addBoard(Board board);
     public void updateBoard(Board board);
+
+    public void addReply(long parentId, Board board);
 }

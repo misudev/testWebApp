@@ -15,6 +15,7 @@ import java.util.List;
 import jdbcboard.dao.BoardDao;
 import jdbcboard.dao.BoardDaoImpl;
 import jdbcboard.dto.Board;
+import jdbcboard.dto.User;
 import jdbcboard.service.BoardService;
 import jdbcboard.service.BoardServiceImpl;
 
@@ -48,8 +49,9 @@ public class ReadServlet extends HttpServlet {
 
         long signedId = -1;
         HttpSession session = req.getSession();
-        if (session.getAttribute("signedUser") != null) {
-            signedId = (long) session.getAttribute("signedUser");
+        if (session.getAttribute("logininfo") != null) {
+            User user = (User) (session.getAttribute("logininfo"));
+            signedId = user.getId();
         }
         req.setAttribute("signedId", signedId);
 

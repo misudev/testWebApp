@@ -1,7 +1,6 @@
 package jdbcboard.dto;
 
 import java.util.Date;
-import java.time.LocalDateTime;
 
 
 // VO or DTO - 하나의 값을 가지는 객체
@@ -9,7 +8,7 @@ public class Board {
     // 필드
     private Long id;
     private Long userId;
-    private String name;
+    private String nickName;
     private String title;
     private String content;
     private Date regdate;
@@ -23,18 +22,30 @@ public class Board {
     public Board(){
         regdate = new Date(); // 현재 시간을 저장.
     }
-
-    public Board(Long userId, String title, String content) {
+    // get boards 용.
+    public Board(Long id, Long userId, String nickName, String title,Date regdate, int readCount, int depth ) {
+        this();
+        this.id = id;
+        this.userId = userId;
+        this.nickName = nickName;
+        this.title = title;
+        this.regdate = regdate;
+        this.readCount = readCount;
+        this.depth = depth;
+    }
+    //write 용
+    public Board(Long userId, String nickName, String title, String content) {
         this();
         this.userId = userId;
+        this.nickName = nickName;
         this.title = title;
         this.content = content;
     }
 
-    public Board(Long id, Long userId, String name, String title, String content, Date regdate, int readCount) {
-        this(userId, title, content);
+    public Board(Long id, Long userId, String nickName, String title, String content, Date regdate, int readCount) {
+        this(userId, nickName, title, content);
         this.id = id;
-        this.name = name;
+        this.nickName = nickName;
         this.regdate = regdate;
         this.readCount = readCount;
     }
@@ -48,12 +59,12 @@ public class Board {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
 
@@ -118,7 +129,7 @@ public class Board {
         return "Board{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", name='" + name + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", regdate=" + regdate +

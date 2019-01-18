@@ -29,6 +29,7 @@
 <body>
 <form id="loginForm" action="/login" method="post">
     <p class="ti1">BOARD LOGIN</p>
+    <input type="hidden" name="redirect" value="${param.redirect}">
     <fieldset>
         <legend> LOGIN</legend>
         <div id="login">

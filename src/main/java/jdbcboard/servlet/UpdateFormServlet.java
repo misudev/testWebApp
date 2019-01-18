@@ -3,6 +3,7 @@ package jdbcboard.servlet;
 import jdbcboard.dao.BoardDao;
 import jdbcboard.dao.BoardDaoImpl;
 import jdbcboard.dto.Board;
+import jdbcboard.dto.User;
 import jdbcboard.service.BoardService;
 import jdbcboard.service.BoardServiceImpl;
 
@@ -32,7 +33,8 @@ public class UpdateFormServlet extends HttpServlet {
             return;
         }
         req.setAttribute("board", board);
-        if((Long)session.getAttribute("signedUser") != board.getUserId()){
+        User user = (User)session.getAttribute("logininfo");
+        if(user.getId() != board.getUserId()){
             resp.sendRedirect("/board");
         }else {
             RequestDispatcher requestDispatcher =
@@ -46,11 +48,12 @@ public class UpdateFormServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        Long userId = (Long)session.getAttribute("signedUser");
+        User user = (User)session.getAttribute("logininfo");
+
         Long id = Long.parseLong(req.getParameter("id"));
         String title = req.getParameter("title");
         String content = req.getParameter("content");
-        Board board = new Board(userId,title,content);
+        Board board = new Board(user.getId(), user.getNickname(),title,content);
         board.setId(id);
 
 

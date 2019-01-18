@@ -3,6 +3,7 @@ package jdbcboard.servlet;
 import jdbcboard.dao.BoardDao;
 import jdbcboard.dao.BoardDaoImpl;
 import jdbcboard.dto.Board;
+import jdbcboard.dto.User;
 import jdbcboard.service.BoardService;
 import jdbcboard.service.BoardServiceImpl;
 
@@ -24,14 +25,10 @@ public class WriteFormServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        if((Long)session.getAttribute("signedUser") == null){
-            resp.sendRedirect("/login");
-        }else {
             RequestDispatcher requestDispatcher =
                     req.getRequestDispatcher("/WEB-INF/views/writeform.jsp");
             requestDispatcher.forward(req, resp);
-        }
+
     }
 
     @Override
@@ -39,12 +36,13 @@ public class WriteFormServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        Long userId = (Long)session.getAttribute("signedUser");
+        //Long userId = (Long)session.getAttribute("signedUser");
+        User user = (User)session.getAttribute("logininfo");
         String title = req.getParameter("title");
         String content = req.getParameter("content");
 
         BoardService boardService = new BoardServiceImpl();
-        Board board = new Board(userId, title, content);
+        Board board = new Board(user.getId(), user.getNickname(), title, content);
         boardService.addBoard(board);
         resp.sendRedirect("/board");
     }

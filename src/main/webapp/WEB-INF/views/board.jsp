@@ -28,11 +28,12 @@
 <div style="width:90%; padding-top:10px;">
 
     <c:choose>
-        <c:when test="${sessionScope.signedUser != null}">
+        <c:when test="${sessionScope.logininfo != null}">
+            <div style="margin-left: 15% "><b>${sessionScope.logininfo.nickname}</b>님 환영합니다.</div>
             <a class="btn btn-default" href="/write"  style='width:10%; float:right;'>글쓰기</a>
             <a class="btn btn-default" href="/logout" style='width:10%; float:right;'>로그아웃</a>
         </c:when>
-        <c:when test="${sessionScope.signedUser == null}">
+        <c:when test="${sessionScope.logininfo == null}">
             <a class="btn btn-default" href="/userjoin" style='width:10%; float:right;'>회원가입</a>
             <a class="btn btn-default" href="/login" style='width:10%; float:right;'>로그인</a></c:when>
         <c:otherwise>위조건이외의 실행</c:otherwise>
@@ -50,9 +51,9 @@
     <tbody>
     <c:forEach items="${boards}" var="board">
         <tr>
-            <td>${board.id}</td>
+            <td>${board.thread}</td>
             <td><a href="/read?id=${board.id}">${board.title}</a></td>
-            <td>${board.name}</td>
+            <td>${board.nickName}</td>
             <td>${board.regdate}</td>
             <td>${board.readCount}</td>
         </tr>
@@ -60,10 +61,16 @@
     </tbody>
 </table>
 
-
 <div class="text-center" style="width:50%; margin:0 auto; margin-top:10px;">
     <ul class = "pagination">
-        <li><a href="#">&laquo;</a></li>
+        <li>
+            <c:if test="${param.page != 1}">
+            <a href="?page=${param.page-1}">&laquo;</a>
+            </c:if>
+            <c:if test="${param.page == 1}">
+                <a href="?page=${param.page}">&laquo;</a>
+            </c:if>
+        </li>
         <li><a href="?page=1">1</a></li>
         <li><a href="?page=2">2</a></li>
         <li><a href="?page=3">3</a></li>
@@ -74,7 +81,14 @@
         <li><a href="?page=8">8</a></li>
         <li><a href="?page=9">9</a></li>
         <li><a href="?page=10">10</a></li>
-        <li><a href="#">&raquo;</a></li>
+        <li>
+            <c:if test="${param.page != 10}">
+                <a href="?page=${param.page+1}">&raquo;</a>
+            </c:if>
+            <c:if test="${param.page == 10}">
+                <a href="?page=${param.page}">&laquo;</a>
+            </c:if>
+        </li>
     </ul>
 </div>
 
@@ -82,7 +96,7 @@
 <div class="box1" style="width:40%; margin:3% auto 10%;">
     <div class="form-group" style="width:17%; margin-right:2%; float:left;">
         <label class="sr-only" for="sop">sop</label>
-        <select name=sop class="form-control">
+        <select nickName=sop class="form-control">
             <option value=제목>제목</option>
             <option value=내용>내용</option>
             <option value=작성자>작성자</option>
@@ -90,7 +104,7 @@
     </div>
     <div class="form-group" style="width:60%; float:left;">
         <label class="sr-only" for="stx">stx</label>
-        <input name=stx maxlength=15 size=10 itemname="검색어" required value='' class="form-control">
+        <input nickName=stx maxlength=15 size=10 itemname="검색어" required value='' class="form-control">
     </div>
     <div class="form-group" >
         <button class="btn btn-default" style="float: right; width:17%;">검색</button>

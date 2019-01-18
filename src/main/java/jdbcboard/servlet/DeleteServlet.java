@@ -3,6 +3,9 @@ package jdbcboard.servlet;
 import jdbcboard.dao.BoardDao;
 import jdbcboard.dao.BoardDaoImpl;
 import jdbcboard.dto.Board;
+import jdbcboard.dto.User;
+import jdbcboard.service.BoardService;
+import jdbcboard.service.BoardServiceImpl;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,11 +27,10 @@ public class DeleteServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         long signedId = -1;
-        if (session.getAttribute("signedUser") != null) {
-            signedId = (long) session.getAttribute("signedUser");
-        }else {
-            return;
-        }
+
+        User user = (User) (session.getAttribute("logininfo"));
+            signedId = user.getId();
+
 
         Long id = 0L;
         try{
@@ -37,11 +39,10 @@ public class DeleteServlet extends HttpServlet {
         }catch(Exception ex){
             // id가 잘못되었을 경우엔 에러페이지로 이동.
         }
-        BoardDao boardDao = new BoardDaoImpl();
-        Board board = boardDao.getBoard(id);
-        if(board.getUserId() == signedId){
-            boardDao.deleteBoard(id);
-        }
+
+        BoardService boardService = new BoardServiceImpl();
+        boardService.deleteBoard(id, signedId);
+
 
         resp.sendRedirect("/board");
     }

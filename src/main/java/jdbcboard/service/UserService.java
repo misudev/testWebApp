@@ -8,4 +8,6 @@ public interface UserService {
     public void addUser(User user);
     public long hasUser(String email, String passwd);
 
+    String getPasswdByEmail(String email);
+    User getUserByEmail(String passwd);
 }

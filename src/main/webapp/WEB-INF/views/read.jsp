@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <link href="/view.css" type="text/css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta nickName="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS -->
     <link href="bs/css/bootstrap.min.css" rel="stylesheet">
 
@@ -23,7 +23,7 @@
     </div>
     <div id = "second-line">
         <div id = "view-date" class="top">${board.regdate}</div>
-        <div id = "view-writer" class="top">${board.name}</div>
+        <div id = "view-writer" class="top">${board.nickName}</div>
     </div>
     <div id = "content">
         ${board.content}

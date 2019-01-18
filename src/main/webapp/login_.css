@@ -28,7 +28,8 @@ p.ti1{font-size:2em;
 
 
 
-#loginForm{width:30%;
+#loginForm{
+	width:55%;
 	margin:0 auto;
 	margin-top:250px;
 	margin-bottom:200px;

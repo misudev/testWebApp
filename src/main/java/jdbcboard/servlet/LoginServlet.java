@@ -5,6 +5,8 @@ import jdbcboard.dao.UserDaoImpl;
 import jdbcboard.dto.User;
 import jdbcboard.service.UserService;
 import jdbcboard.service.UserServiceImpl;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,12 +36,29 @@ public class LoginServlet extends HttpServlet {
         String email = req.getParameter("user-email");
         String passwd = req.getParameter("user-pw");
 
-        UserService userService = new UserServiceImpl();
-        Long userId = userService.hasUser(email, passwd);
-
-        HttpSession session = req.getSession();
-        if(userId != -1){
-            session.setAttribute("signedUser", userId);
+        UserService userService = UserServiceImpl.getInstance();
+        String encodePasswd = userService.getPasswdByEmail(email);
+        if(encodePasswd != null){
+            PasswordEncoder passwordEncoder =
+                    PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            boolean matches = passwordEncoder.matches(passwd, encodePasswd);
+            if(matches){
+                // 로그인정보를 세션에 저장.
+                HttpSession session = req.getSession();
+                User loginedUser = userService.getUserByEmail(email);
+                System.out.println("logined User : " + loginedUser.getNickname());
+                session.setAttribute("logininfo",loginedUser );
+                System.out.println("암호가 맞아요.");
+            }else{
+                // 암호가 틀렸어요.
+                System.out.println("암호가 틀렸어요.");
+            }
+        }
+        String redirect = req.getParameter("redirect");
+        System.out.println(redirect);
+        if(redirect!= ""){
+            resp.sendRedirect("/"+redirect);
+            return;
         }
         resp.sendRedirect("/board");
     }

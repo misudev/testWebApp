@@ -36,9 +36,6 @@
 <body>
 
 
-
-
-
 <!-- ---------------------form------------------------------->
 <div class="info">
     <h2>< 회원 정보 입력 ></h2>
@@ -50,13 +47,20 @@
         <fieldset id="sec">
             <legend>정보</legend>
             <ul>
-                <li><label class="userId" for="name">이름</label>
+                <li><label class="userId" for="nickName">이름</label>
                     <input type="text" id="name" name = "user-name" placeholder="한글,영문 / 특수문자 불가" autofocus required>
+                </li>
+                <li><label class="userId" for="nickName">닉네임</label>
+                <input type="text" id="nickname" name = "user-nickname" placeholder="한글,영문 / 중복X" autofocus required>
 
+            </li>
+
+                <li><label for="user-pw" class="labelStyle">비밀번호</label>
+                    <input type="password" name = "user-pw" id="user-pw" placeholder="영문 / 숫자 8~12자입력해주세요."  maxLength="12" required />
                 </li>
 
-                <li><label for="userPWD" class="labelStyle">비밀번호</label>
-                    <input type="password" name = "user-pw" id="userPWD" placeholder="영문 / 숫자 8~12자입력해주세요."  maxLength="12" required />
+                <li><label for="user-pw_" class="labelStyle">비밀번호 확인</label>
+                    <input type="password" id="user-pw_" name="user-pw_" placeholder="영문 / 숫자 8~12자입력해주세요."  maxLength="12" required /> &nbsp; <span id = "check" style="color:red;"></span>
                 </li>
 
                 <li><label class="email" for="email">이메일</label>
@@ -81,8 +85,17 @@
 
     </form>
 </div>
+<script type="text/javascript">
+    function tocheckpw() {
+        var userPWD = document.getElementById("user-pw").value;
+        var userPWD1 = document.getElementById("user-pw_").value;
 
-
+        if (userPWD != userPWD1) {
+            document.getElementById('check').innerHTML = '비밀번호가 틀렸습니다. 다시 입력해 주세요';
+            return false;
+        }
+    }
+</script>
 
 
 </body>

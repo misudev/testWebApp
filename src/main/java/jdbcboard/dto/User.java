@@ -4,17 +4,20 @@ public class User {
     //필드
     private Long id;
     private String name;
+    private String nickname;
     private String passwd;
     private String email;
 
-    public User(String name, String passwd, String email){
+
+    public User(String name, String nickname, String passwd, String email){
         this.name = name;
+        this.nickname = nickname;
         this.passwd = passwd;
         this.email = email;
     }
 
-    public User(Long id, String name, String passwd, String email){
-        this(name, passwd, email);
+    public User(Long id, String nickname, String name, String passwd, String email){
+        this(name, nickname, passwd, email);
         this.id = id;
     }
 
@@ -48,6 +51,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Override

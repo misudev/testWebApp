@@ -3,6 +3,9 @@ package jdbcboard.servlet;
 import jdbcboard.dao.BoardDao;
 import jdbcboard.dao.BoardDaoImpl;
 import jdbcboard.dto.Board;
+import jdbcboard.dto.User;
+import jdbcboard.service.BoardService;
+import jdbcboard.service.BoardServiceImpl;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,7 +27,7 @@ public class ReplyFormServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         req.setAttribute("id",Long.parseLong(req.getParameter("id")));
-        if((Long)session.getAttribute("signedUser") == null){
+        if(session.getAttribute("logininfo") == null){
             resp.sendRedirect("/login");
         }else {
             RequestDispatcher requestDispatcher =
@@ -38,15 +41,17 @@ public class ReplyFormServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        Long userId = (Long)session.getAttribute("signedUser");
+        User user = (User)session.getAttribute("logininfo");
         Long parentId = Long.parseLong(req.getParameter("parent-id"));
         String title = req.getParameter("title");
         String content = req.getParameter("content");
 
 
-        BoardDao boardDao = new BoardDaoImpl();
-        Board board = new Board(userId, title, content);
-        boardDao.addReply(board, parentId);
+
+        Board board = new Board(user.getId(), user.getNickname(), title, content);
+
+        BoardService boardService = new BoardServiceImpl();
+        boardService.addReply(parentId, board);
         resp.sendRedirect("/board");
     }
 
