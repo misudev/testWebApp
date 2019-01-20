@@ -31,14 +31,14 @@ public class BoardServiceImpl implements BoardService{
         return boards;
     }
 
-    public long getBoardCount() {
+    public long getCountBoard() {
         long count = 0L;
         BoardDao boardDao = new BoardDaoImpl();
         Connection conn = null;
         try{
             conn = DBUtil.getInstance().getConnection();
             ConnectionContextHolder.setConnection(conn);
-            count = boardDao.getCount();
+            count = boardDao.getCountBoard();
         }catch(Exception ex){
             DBUtil.rollback(conn);
             ex.printStackTrace();
@@ -147,7 +147,7 @@ public class BoardServiceImpl implements BoardService{
             Long thread = tmpBoard.getThread();
             int depth = tmpBoard.getDepth();
             // 2. thread 업데이트. ( thread unique??...)
-            boardDao.updateThreadMinus(thread);
+            boardDao.updateThreadMinus(thread - 1);
             // 3. board 설정
             board.setThread(thread - 1);
             board.setDepth(depth + 1);
@@ -161,5 +161,77 @@ public class BoardServiceImpl implements BoardService{
         }finally {
             DBUtil.close(conn);
         }
+    }
+
+    @Override
+    public List<Board> searchByTitle(int page, String keyword) {
+        List<Board> boards = new ArrayList<>();
+        BoardDao boardDao = new BoardDaoImpl();
+
+        int start = SIZE * page - SIZE;
+        int limit = SIZE;
+
+        try (Connection conn = DBUtil.getInstance().getConnection();){
+            ConnectionContextHolder.setConnection(conn);
+            boards = boardDao.getBoardsByTitle(keyword, start, limit);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return boards;
+    }
+
+    @Override
+    public List<Board> searchByContent(int page, String keyword) {
+        List<Board> boards = new ArrayList<>();
+        BoardDao boardDao = new BoardDaoImpl();
+
+        int start = SIZE * page - SIZE;
+        int limit = SIZE;
+
+        try (Connection conn = DBUtil.getInstance().getConnection();){
+            ConnectionContextHolder.setConnection(conn);
+            boards = boardDao.getBoardsByContent(keyword, start, limit);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return boards;
+    }
+
+    @Override
+    public long countByTitle(String keyword) {
+        long count = 0L;
+        BoardDao boardDao = new BoardDaoImpl();
+        Connection conn = null;
+        try{
+            conn = DBUtil.getInstance().getConnection();
+            ConnectionContextHolder.setConnection(conn);
+            count = boardDao.countByTitle(keyword);
+        }catch(Exception ex){
+            DBUtil.rollback(conn);
+            ex.printStackTrace();
+        }finally {
+            DBUtil.close(conn);
+        }
+        return count;
+    }
+
+    @Override
+    public long countByContent(String keyword) {
+        long count = 0L;
+        BoardDao boardDao = new BoardDaoImpl();
+        Connection conn = null;
+        try{
+            conn = DBUtil.getInstance().getConnection();
+            ConnectionContextHolder.setConnection(conn);
+            count = boardDao.countByContent(keyword);
+        }catch(Exception ex){
+            DBUtil.rollback(conn);
+            ex.printStackTrace();
+        }finally {
+            DBUtil.close(conn);
+        }
+        return count;
     }
 }

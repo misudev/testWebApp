@@ -9,7 +9,6 @@ public interface BoardDao {
 
     public List<Board> getBoards(long start, int limit);
 
-    Long getCount();
 
     void updateReadCount(Long id);
 
@@ -43,6 +42,16 @@ public interface BoardDao {
     void updateCountBoard();
 
     void updateCountBoardMinus();
+
+    // search
+
+    public List<Board> getBoardsByTitle(String keyword, long start, int limit);
+
+    public List<Board> getBoardsByContent(String keyword, long start, int limit);
+
+    public long countByTitle(String keyword);
+
+    public long countByContent(String keyword);
 
     //public static final String SELECT_THREAD_BY_ID =
     //            "SELECT thread, depth FROM board where id = ?";

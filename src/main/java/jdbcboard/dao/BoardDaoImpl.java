@@ -56,20 +56,13 @@ public class BoardDaoImpl implements BoardDao{
         Connection conn = null;
 
         try {
-            // a. DB 연결 - Connection
-            //    DB연결을 하려면 필요한 정보가 있다. Driver classname, DB URL, DB UserId , DB User Password
             conn = ConnectionContextHolder.getConnection();
-            // b. SELECT SQL 준비 - Connection
-            //String sql = "SELECT b.id, b.user_id, b.title, b.content, u.name, b.regdate, b.read_count FROM board b INNER JOIN user u ON b.user_id = u.id ORDER BY b.thread DESC LIMIT ?, ?";
             try(PreparedStatement ps = conn.prepareStatement(BoardDaoSQL.SELECT_BY_PAGING);) {
-                // c. 바인딩 - PreparedStatement
-                ps.setLong(1, start); // 첫번째 물음표에 5를 바인딩한다.
+                ps.setLong(1, start);
                 ps.setInt(2, limit);
 
-                // d. SQL 실행 - PreparedStatement
                 try (ResultSet rs = ps.executeQuery();) { // SELECT 문장을 실행, executeUpdate() - insert, update, delete
 
-                    //id, user_id, title, nickname, regdate, read_count , depth, thread
                     while (rs.next()) {
                         long id = rs.getLong(1);
                         long userId = rs.getLong(2);
@@ -85,7 +78,6 @@ public class BoardDaoImpl implements BoardDao{
                         list.add(board);
                     }
                 }
-
             }
 
         }catch(Exception ex){
@@ -93,7 +85,7 @@ public class BoardDaoImpl implements BoardDao{
         }
         return list;
     }
-
+/*
     @Override
     public Long getCount() {
         long count = 0L;
@@ -114,7 +106,7 @@ public class BoardDaoImpl implements BoardDao{
         }
         return count;
     }
-
+*/
     @Override
     public void updateReadCount(Long id) {
         Connection conn = null;
@@ -250,7 +242,7 @@ public class BoardDaoImpl implements BoardDao{
             conn = ConnectionContextHolder.getConnection();
             try(PreparedStatement ps = conn.prepareStatement(BoardDaoSQL.UPDATE_THREAD_MINUS);) {
                 ps.setLong(1, (thread/100) * 100);  // min
-                ps.setLong(2, thread );    //max
+                ps.setLong(2, thread + 1 );    //max
                 ps.executeUpdate();
             }
 
@@ -375,6 +367,124 @@ public class BoardDaoImpl implements BoardDao{
             conn = ConnectionContextHolder.getConnection();
 
             try(PreparedStatement ps = conn.prepareStatement(BoardDaoSQL.SELECT_COUNT_BOARD);) {
+                try(ResultSet rs = ps.executeQuery();) {
+                    if (rs.next()) {
+                        count = rs.getLong(1);
+                    }
+                }
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return count;
+    }
+
+    @Override
+    public List<Board> getBoardsByTitle(String keyword, long start, int limit) {
+        List<Board> list = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+            conn = ConnectionContextHolder.getConnection();
+            try(PreparedStatement ps = conn.prepareStatement(BoardDaoSQL.SELECT_SEARCH_BY_TITLE);) {
+                ps.setString(1,"%"+ keyword + "%");
+                ps.setLong(2, start);
+                ps.setInt(3, limit);
+
+                try (ResultSet rs = ps.executeQuery();) { // SELECT 문장을 실행, executeUpdate() - insert, update, delete
+
+                    while (rs.next()) {
+                        long id = rs.getLong(1);
+                        long userId = rs.getLong(2);
+                        String title = rs.getString(3);
+                        String name = rs.getString(4);
+                        Date regdate = rs.getDate(5);
+                        int readCount = rs.getInt(6);
+                        int depth = rs.getInt(7);
+                        long thread = rs.getLong(8);
+
+                        Board board = new Board(id, userId, name, title, regdate, readCount, depth);
+                        board.setThread(thread);
+                        list.add(board);
+                    }
+                }
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Board> getBoardsByContent(String keyword,long start, int limit) {
+        List<Board> list = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+            conn = ConnectionContextHolder.getConnection();
+            try(PreparedStatement ps = conn.prepareStatement(BoardDaoSQL.SELECT_SEARCH_BY_CONTENT);) {
+                ps.setString(1,"%"+ keyword + "%");
+                ps.setLong(2, start);
+                ps.setInt(3, limit);
+
+                try (ResultSet rs = ps.executeQuery();) { // SELECT 문장을 실행, executeUpdate() - insert, update, delete
+
+                    while (rs.next()) {
+                        long id = rs.getLong(1);
+                        long userId = rs.getLong(2);
+                        String title = rs.getString(3);
+                        String name = rs.getString(4);
+                        Date regdate = rs.getDate(5);
+                        int readCount = rs.getInt(6);
+                        int depth = rs.getInt(7);
+                        long thread = rs.getLong(8);
+
+                        Board board = new Board(id, userId, name, title, regdate, readCount, depth);
+                        board.setThread(thread);
+                        list.add(board);
+                    }
+                }
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public long countByTitle(String keyword) {
+        long count = 0;
+        Connection conn = null;
+        try {
+            conn = ConnectionContextHolder.getConnection();
+
+            try(PreparedStatement ps = conn.prepareStatement(BoardDaoSQL.COUNT_SEARCY_BY_TITLE);) {
+                ps.setString(1,"%"+ keyword + "%");
+                try(ResultSet rs = ps.executeQuery();) {
+                    if (rs.next()) {
+                        count = rs.getLong(1);
+                    }
+                }
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return count;
+    }
+
+    @Override
+    public long countByContent(String keyword) {
+        long count = 0;
+        Connection conn = null;
+        try {
+            conn = ConnectionContextHolder.getConnection();
+
+            try(PreparedStatement ps = conn.prepareStatement(BoardDaoSQL.COUNT_SEARCY_BY_CONTENT);) {
+                ps.setString(1,"%"+ keyword + "%");
                 try(ResultSet rs = ps.executeQuery();) {
                     if (rs.next()) {
                         count = rs.getLong(1);

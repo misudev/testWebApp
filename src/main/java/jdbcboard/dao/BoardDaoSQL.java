@@ -5,8 +5,8 @@ public class BoardDaoSQL {
             "SELECT id, user_id, title, nickname, regdate, read_count , depth, thread FROM board ORDER BY thread DESC LIMIT ?, ?";
     public static final String SELECT_BY_ID  =
             "SELECT id, user_id, title, content, nickname, regdate, read_count, depth, thread FROM board where id = ?";
-    public static final String COUNT_BOARD=
-            "SELECT COUNT(*) FROM board";
+    //public static final String COUNT_BOARD=
+          //  "SELECT COUNT(*) FROM board";
     public static final String INSERT_NEW =
             "INSERT INTO board (thread, user_id, nickname, title, content) VALUES ((SELECT IFNULL(MAX(thread) + 100, 100) FROM board b),? ,?,?,?)";
     public static final String UPDATE_READCOUNT =
@@ -39,4 +39,17 @@ public class BoardDaoSQL {
             "UPDATE manage SET max_thread = max_thread - 1 WHERE id = 1";
     public static final String UPDATE_COUNT_BOARD_MINUS =
             "UPDATE manage SET  count_board= count_board - 1 WHERE id = 1";
+
+    // search
+    public static final String SELECT_SEARCH_BY_CONTENT =
+            "SELECT id, user_id, title, nickname, regdate, read_count , depth, thread FROM board " +
+                    "WHERE content LIKE ? ORDER BY thread DESC LIMIT ?, ?";
+    public static final String SELECT_SEARCH_BY_TITLE =
+            "SELECT id, user_id, title, nickname, regdate, read_count , depth, thread FROM board " +
+                    "WHERE title LIKE ? ORDER BY thread DESC LIMIT ?, ?";
+    public static final String COUNT_SEARCY_BY_CONTENT =
+            "SELECT COUNT(*) FROM board WHERE content LIKE ?";
+    public static final String COUNT_SEARCY_BY_TITLE =
+            "SELECT COUNT(*) FROM board WHERE title LIKE ?";
+
 }

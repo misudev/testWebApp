@@ -19,7 +19,7 @@ public class SecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("요청이 올때");
+       // System.out.println("요청이 올때");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
@@ -30,7 +30,7 @@ public class SecurityFilter implements Filter {
             return;
         }
         filterChain.doFilter(servletRequest, servletResponse);
-        System.out.println("서블릿이 실행된 이후");
+       // System.out.println("서블릿이 실행된 이후");
     }
 
     @Override

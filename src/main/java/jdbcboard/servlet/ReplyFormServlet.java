@@ -26,32 +26,56 @@ public class ReplyFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        req.setAttribute("id",Long.parseLong(req.getParameter("id")));
-        if(session.getAttribute("logininfo") == null){
-            resp.sendRedirect("/login");
-        }else {
-            RequestDispatcher requestDispatcher =
-                    req.getRequestDispatcher("/WEB-INF/views/replyform.jsp");
-            requestDispatcher.forward(req, resp);
+        long id = 0;
+        String idStr = req.getParameter("id");
+
+        try{
+            id = Long.parseLong(idStr);
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return;
         }
+
+        BoardService boardService = new BoardServiceImpl();
+        Board board = boardService.getBoard(id);
+
+        String content = board.getContent();
+        content = content.replaceAll("\n", "\n> ");
+        System.out.println(content);
+        board.setContent(content);
+
+        req.setAttribute("board", board);
+
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/WEB-INF/views/replyform.jsp");
+        requestDispatcher.forward(req, resp);
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
+
 
         HttpSession session = req.getSession();
-        User user = (User)session.getAttribute("logininfo");
-        Long parentId = Long.parseLong(req.getParameter("parent-id"));
+        long id = 0;
+        String idStr = req.getParameter("parent-id");
+
+        try{
+            id = Long.parseLong(idStr);
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return;
+        }
+
         String title = req.getParameter("title");
         String content = req.getParameter("content");
 
+        User user = (User) req.getSession().getAttribute("logininfo");
 
 
         Board board = new Board(user.getId(), user.getNickname(), title, content);
 
         BoardService boardService = new BoardServiceImpl();
-        boardService.addReply(parentId, board);
+        boardService.addReply(id, board);
         resp.sendRedirect("/board");
     }
 

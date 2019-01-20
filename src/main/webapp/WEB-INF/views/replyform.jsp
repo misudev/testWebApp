@@ -22,9 +22,13 @@
     <div class="page-header">
         <h2>답글쓰기</h2>
     </div>
+    <div class="form-group">
+        <label for="name">이름:</label>
+        <label>${sessionScope.logininfo.nickname}</label>
+    </div>
     <div class="content">
         <form action="/reply" method="post">
-        <input type="hidden" id="parent-id" name="parent-id" value="${id}">
+        <input type="hidden" id="parent-id" name="parent-id" value="${board.id}">
 
         <div class="form-group">
             <label for="title">제목:</label>
@@ -32,7 +36,9 @@
         </div>
         <div class="form-group">
             <label for="content">내용:</label>
-            <textarea class="form-control" rows="12" id="content" name="content"></textarea>
+            <textarea class="form-control" rows="12" id="content" name="content">
+                ${board.content}
+            </textarea>
         </div>
         <div class="buttons" style="float: right;">
             <button type="button" class="btn btn-default" onClick=" location.href='/board'">취소</button>
